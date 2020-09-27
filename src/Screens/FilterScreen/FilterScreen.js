@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Button, TouchableOpacity, Dimensions, ScrollVie
 import Back1 from '../../Icon/back (1).svg';
 import RangeSlider from 'rn-range-slider';
 import { connect } from 'react-redux';
-import { setFilters } from '../../redux/actions/product';
+import { setFilters, fetchFilters } from '../../redux/actions/product';
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -76,7 +76,6 @@ class FilterScreen extends Component {
 		super(props);
 		this.state = {
 			categoryHeight: 170,
-
 			filters: {
 				lst_cate_id: '',
 				lst_city_id: '',
@@ -87,9 +86,14 @@ class FilterScreen extends Component {
 		}
 	}
 
+	setFilter = () => {
+		this.props.setFilters(this.state.filters);
+		this.props.navigation.goBack();
+	}
 
 	render() {
-		const { categoryHeight, filters } = this.state
+		console.log('props', this.props.product);
+		const { filters, categoryHeight } = this.state
 		return (
 			<View style={{ flex: 1, position: 'relative' }}>
 				<View style={styles.headerContainer}>
@@ -105,58 +109,44 @@ class FilterScreen extends Component {
 						<View style={styles.categoryContainer}>
 							<Text style={styles.contentHeader} >Danh Mục</Text>
 							<View style={[styles.categoryItemsContainer, { height: categoryHeight }]}>
-								<TouchableOpacity onPress={() => this.setState({ filters: { sup_id: '' } })} style={styles.categoryItem}>
-									<Text>Phụ kiện điện thoại</Text>
-								</TouchableOpacity>
-								<TouchableOpacity style={styles.categoryItem}>
-									<Text>Điện thoại smartphone</Text>
-								</TouchableOpacity>
-								<TouchableOpacity style={styles.categoryItem}>
-									<Text>Truyện tranh</Text>
-								</TouchableOpacity>
-
-								<TouchableOpacity
-									style={{
-										position: 'absolute',
-										bottom: 2,
-										left: '30%',
-										right: '30%',
-									}}
-									onPress={() => { this.setState({ categoryHeight: (categoryHeight + 200) }) }}>
-									<Text style={{ color: '#6979f8' }}>
-										Xem thêm..
-								</Text>
-								</TouchableOpacity>
+								{this.props.product.listFilters.filter_cate.map(filter => {
+									return (
+										<TouchableOpacity onPress={() => this.setState({ filter: { lst_cate_id: filter.id } })} style={styles.categoryItem}>
+											<Text>{filter.name}</Text>
+										</TouchableOpacity>
+									)
+								})}
 							</View>
 
 						</View>
 						<View style={styles.locationContainer}>
 							<Text style={styles.contentHeader}>Địa điểm</Text>
 							<View style={styles.categoryItemsContainer}>
-								<TouchableOpacity onPress={() => this.setState({ filters: { lst_city_id: '' } })} style={styles.categoryItem}>
-									<Text>Hàn quốc (900)</Text>
-								</TouchableOpacity>
-								<TouchableOpacity style={styles.categoryItem}>
-									<Text>Thành phố Hồ Chí Minh (300)</Text>
-								</TouchableOpacity>
-								<TouchableOpacity style={styles.categoryItem}>
-									<Text>Hà Nội(600)</Text>
-								</TouchableOpacity>
+								{this.props.product.listFilters.filter_location.map(filter => {
+									return (
+										<TouchableOpacity onPress={() => this.setState({ filters: { lst_city_id: filter.id } })} style={styles.categoryItem}>
+											<Text>{filter.name}</Text>
+										</TouchableOpacity>
+									)
+								})}
 							</View>
 						</View>
 						<View style={styles.brandContainer}>
 							<Text style={styles.contentHeader}>Thương hiệu</Text>
 							<View style={styles.categoryItemsContainer}>
-								<TouchableOpacity onPress={() => this.setState({ filters: { sup_id: '' } })} style={styles.categoryItem}>
-									<Text>Thế giới di động</Text>
-								</TouchableOpacity>
+								{this.props.product.listFilters.filter_sup.map(filter => {
+									<TouchableOpacity onPress={() => this.setState({ filters: { sup_id: filter.id } })} style={styles.categoryItem}>
+										<Text>{filter.name}</Text>
+									</TouchableOpacity>
+								})}
+
 							</View>
 						</View>
 
 						<View>
 							<Text style={styles.contentHeader}>Theo khoảng giá</Text>
 							<View style={styles.rangeSlider}>
-								<Text>{this.state.filters.lowPrice} đ</Text>
+								<Text>{this.state.lowPrice} đ</Text>
 								<RangeSlider
 									style={{ width: 200, height: 80 }}
 									min={10000}
@@ -173,13 +163,13 @@ class FilterScreen extends Component {
 										})
 									}}
 								/>
-								<Text>{this.state.filters.highPrice} đ</Text>
+								<Text>{this.state.highPrice} đ</Text>
 							</View>
 						</View>
 					</View>
 
 				</ScrollView>
-				<TouchableOpacity onPress={() => this.props.setFilters(filters)} style={styles.applyButton}>
+				<TouchableOpacity onPress={this.setFilter} style={styles.applyButton}>
 					<Text style={{ color: 'white', fontSize: 20 }}>Áp dụng</Text>
 				</TouchableOpacity>
 			</View>

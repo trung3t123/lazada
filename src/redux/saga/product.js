@@ -1,5 +1,5 @@
 import { takeLatest, call, put, select } from "redux-saga/effects";
-import { fetchProducts, requestSuccess } from "../actions/product";
+import { fetchProducts, requestSuccess, requestFilterSuccess } from "../actions/product";
 import Axios from "axios";
 
 function* getData() {
@@ -15,7 +15,7 @@ function* getData() {
 }
 
 function fetchApi(fetchType, keyword, lst_cate_id, lst_city_id, sup_id, lowPrice, highPrice) {
-	return Axios.get(`http://giatotnhat.xyz/services/search.php?range_price=${lowPrice,highPrice}&keyword=${keyword}&lst_cate_id=${lst_cate_id}&lst_city_id=${lst_city_id}&${fetchType}&sup_id=${sup_id}`)
+	return Axios.get(`http://giatotnhat.xyz/services/search.php?range_price=${lowPrice, highPrice}&keyword=${keyword}&lst_cate_id=${lst_cate_id}&lst_city_id=${lst_city_id}&${fetchType}&sup_id=${sup_id}`)
 
 }
 

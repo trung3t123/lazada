@@ -8,7 +8,7 @@ const sagaMiddleware = createSagaMiddleware();
 
 
 
-const store = createStore(indexReducers, applyMiddleware(sagaMiddleware));
+const store = createStore(indexReducers, applyMiddleware(sagaMiddleware,thunk));
 
 sagaMiddleware.run(rootSaga)
 

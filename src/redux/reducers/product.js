@@ -1,5 +1,6 @@
 const initialState = {
 	listProducts: [],
+	listFilters: [],
 	fetchType: 'price_esc',
 	keyword: '',
 	lst_cate_id: '',
@@ -17,8 +18,15 @@ const productReducer = (state = initialState, action) => {
 				...state,
 				listProducts: action.payload
 			}
-
 		}
+		case 'REQUEST_FILTER_SUCCESS': {
+			console.log('listFilters', action.payload);
+			return {
+				...state,
+				listFilters: action.payload
+			}
+		}
+
 		case 'FETCH_PRODUCTS': {
 			console.log('fetching');
 			return {
@@ -36,6 +44,12 @@ const productReducer = (state = initialState, action) => {
 				sup_id: action.sup_id,
 				lowPrice: action.lowPrice,
 				highPrice: action.highPrice
+			}
+		}
+
+		case 'FETCH_FILTERS': {
+			return {
+				...state
 			}
 		}
 

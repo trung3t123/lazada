@@ -8,6 +8,14 @@ export const requestSuccess = (responseData) => {
 	}
 }
 
+export const requestFilterSuccess = (responseData) => {
+	return {
+		type: 'REQUEST_FILTER_SUCCESS',
+		payload: responseData
+	}
+}
+
+
 export const fetchProducts = (fetchType, value) => {
 	return {
 		type: 'FETCH_PRODUCTS',
@@ -47,12 +55,15 @@ export const setKeyWord = (keyWord) => {
 	}
 }
 
-// export const fetchData = (fetchType, keyWord) => {
-// 	return function (dispatch) {
-// 		return Axios.get(`http://giatotnhat.xyz/services/search.php?keyword=${keyWord}&${fetchType}`).then((response) => {
-// 			dispatch(requestSuccess(response.data))
-// 		}
-// 		)
-// 	}
-// }
+export const fetchFilters = (keyWord) => {
+	return function (dispatch) {
+		return Axios.get(`http://giatotnhat.xyz/services/get_filter.php?keyword=${keyWord}`).then((response) => {
+			console.log('data', response.data);
+			dispatch(requestFilterSuccess(response.data));
+		}
+		).catch((error) => {
+			dispatch(requestError(error));
+		})
+	}
+}
 

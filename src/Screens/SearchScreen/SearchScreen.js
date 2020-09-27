@@ -8,7 +8,7 @@ import Back1 from '../../Icon/back (1).svg';
 import Funnel from '../../Icon/funnel.svg';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
-import { setFetchType, setKeyWord, fetchData, fetchProducts } from '../../redux/actions/product';
+import { setFetchType, setKeyWord, fetchData, fetchProducts,fetchFilters } from '../../redux/actions/product';
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 		borderColor: '#a6c1f8',
 		width: '80%',
 		height: 40,
-		paddingLeft:10,
+		paddingLeft: 10,
 		borderWidth: 1,
 		borderRadius: 10,
 		margin: 10,
@@ -44,10 +44,19 @@ export class SearchScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			keyword : '',
 			priceIconName: 'arrow-up',
 			fetchType: 'price_esc'
 		}
 	}
+
+	fetchEverything = (value) => {
+		this.setState({keyword : value})
+		const { fetchType } = this.state
+		this.props.fetchFilters(value);
+		this.props.fetchData(fetchType, value);
+	}
+
 
 
 	render() {
@@ -59,7 +68,7 @@ export class SearchScreen extends Component {
 					<TouchableOpacity onPress={() => this.props.navigation.goBack()}>
 						<Back1 width={30} height={30} fill={'#35495e'} />
 					</TouchableOpacity>
-					<TextInput onChangeText={(value) => this.props.fetchData(fetchType,value)} style={styles.searchBar} />
+					<TextInput onChangeText={(value) => this.fetchEverything(value)} style={styles.searchBar} />
 					<TouchableOpacity onPress={() => this.props.navigation.navigate('FilterScreen')} >
 						<Funnel width={30} height={30} fill={'#a6c1f8'} />
 					</TouchableOpacity>
@@ -135,8 +144,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
 	return {
 		setFetchType: (fetchType) => dispatch(setFetchType(fetchType)),
-		setKeyWord : (keyWord) => dispatch(setKeyWord(keyWord)),
-		fetchData: (fetchType,value) => dispatch(fetchProducts(fetchType,value)),
+		setKeyWord: (keyWord) => dispatch(setKeyWord(keyWord)),
+		fetchData: (fetchType, value) => dispatch(fetchProducts(fetchType, value)),
+		fetchFilters: (keyword) => dispatch(fetchFilters(keyword)),
 	}
 }
 
